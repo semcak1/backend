@@ -1,6 +1,8 @@
 
 const express= require("express")
 const jwt = require("jsonwebtoken")
+// const SuccessResponse = require("../backend/app/response/succesful").default
+// const ErrorResponse = require("../backend/app/response/error").default
 // import express from "express";
 const app = express()
 const port = 3000
@@ -35,21 +37,29 @@ app.post("/api/login",(req,res)=>{
     const user= users.find(user => user.name === name && user.password === password)
   
 if (!user) {
-    res.status(400).json("user bulunamadı")
+//    response =  new ErrorResponse({data:null,message:"user bulunamadı",success:false})
+    res.json({data:null,message:"user bulunamadı",success:false})
     return
 }
 
 const accessToken = generateAccessToken(user)
 const refreshToken =generateRefreshToken(user)
 refreshTokens.push(refreshToken)
+// response =  new SuccessResponse({data:{
+//     name:user.name,
+//     id:user.id,
+//     isAdmin:user.isAdmin,
+//     accessToken,
+//     refreshToken
+// },message:"",success:true})
 
-res.json({
+res.json({data:{
     name:user.name,
     id:user.id,
     isAdmin:user.isAdmin,
     accessToken,
     refreshToken
-})
+},message:"",success:true})
 })
 
 app.post("/api/refreshToken",(req,res)=>{
